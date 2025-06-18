@@ -1,1 +1,5 @@
+# mac OS
+.DS_Store
+
+# Script execution result log file
 *.log
