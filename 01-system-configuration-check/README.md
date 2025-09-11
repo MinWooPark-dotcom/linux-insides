@@ -1,7 +1,7 @@
 # 01. 시스템 구성 정보 확인 (Linux)
 시스템 문제를 파악하는 출발점인 커널·CPU·메모리·디스크·네트워크의 현재 상태 분석하는 것이 중요합니다.
 
-## 1.1 커널 정보 확인하기
+## 1.1 커널 정보 확인
 - 실행 스크립트: `kernel-check.sh`
 - 출력 로그: `kernel-check.log`
 
@@ -69,7 +69,7 @@ sudo journalctl -k | less
 # Jun 17 04:23:58 k8s-master kernel: x86/split lock detection: #AC: crashing the kernel on kernel split_locks and warning on user-space split_locks ...
 ```
 
-## 1.2 CPU 정보 확인하기
+## 1.2 CPU 정보 확인
 - 실행 스크립트: `cpu-check.sh`
 - 출력 로그: `cpu-check.log`
 
@@ -176,4 +176,55 @@ lscpu
 #     CPU min MHz:          700.0000
 #     BogoMIPS:             1612.80
 #     Flags:                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr ...
+```
+
+## 1.3 메모리 정보 확인
+- 실행 스크립트: `memory-check.sh`
+- 출력 로그: `memory-check.log`
+
+### 핵심 명령
+
+메모리 전체 구조 (Physical Array, Memory Device) 확인
+```bash
+dmidecode -t memory
+# 메모리 정보는 크게 Physical Memory Array, Memory Device 두 영역으로 나눌 수 있음
+# Physical Memory Array는 CPU 소켓과 연결된 메모리 뱅크 전체, 메모리를 꽂을 수 있는 틀 자체
+# Memory Device는 실제로 슬롯에 꽂혀 있는 RAM 모듈 하나하나를 의미함
+# e.g.
+# # dmidecode 3.5
+# Getting SMBIOS data from sysfs.
+# SMBIOS 3.6.0 present.
+# # SMBIOS implementations newer than version 3.5.0 are not
+# # fully supported by this version of dmidecode.
+
+# Handle 0x0027, DMI type 16, 23 bytes
+# Physical Memory Array
+# 	Location: System Board Or Motherboard
+# 	Use: System Memory
+# 	Error Correction Type: None
+# 	Maximum Capacity: 32 GB
+# 	Error Information Handle: Not Provided
+# 	Number Of Devices: 1
+
+# Handle 0x0028, DMI type 17, 92 bytes
+# Memory Device
+# 	Array Handle: 0x0027
+# 	Error Information Handle: Not Provided
+# 	Total Width: 64 bits
+# 	Data Width: 64 bits
+# 	Size: 16 GB
+# 	Form Factor: SODIMM
+# 	Set: None ...
+```
+
+Memory Device 중 실제 장착된 모듈의 용량만 확인
+```bash
+dmidecode -t memory | grep -i "Size:" | grep -v "No Module"
+# 빈 슬롯(No Module Installed)은 제외하고 장착된 메모리 모듈의 크기만 확인
+# e.g.
+# Size: 16 GB
+# Non-Volatile Size: None
+# Volatile Size: 16 GB
+# Cache Size: None
+# Logical Size: None
 ```
