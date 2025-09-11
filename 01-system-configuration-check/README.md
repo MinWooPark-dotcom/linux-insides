@@ -68,3 +68,112 @@ sudo journalctl -k | less
 # Jun 17 04:23:58 k8s-master kernel:   zhaoxin   Shanghai  
 # Jun 17 04:23:58 k8s-master kernel: x86/split lock detection: #AC: crashing the kernel on kernel split_locks and warning on user-space split_locks ...
 ```
+
+## 1.2 CPU 정보 확인하기
+- 실행 스크립트: `cpu-check.sh`
+- 출력 로그: `cpu-check.log`
+
+### 핵심 명령
+
+bios 정보 확인
+```bash
+sudo dmidecode -t bios
+# 펌웨어 자체에 대한 정보
+# 특정 BIOS 버전에 문제가 있거나, 하드웨어 호환성 확인할 때 사용
+# e.g.
+# dmidecode 3.5
+# Getting SMBIOS data from sysfs.
+# SMBIOS 3.6.0 present.
+# # SMBIOS implementations newer than version 3.5.0 are not
+# # fully supported by this version of dmidecode.
+
+# Handle 0x0000, DMI type 0, 26 bytes
+# BIOS Information
+# 	Vendor: American Megatrends International, LLC.
+# 	Version: 5.27
+# 	Release Date: 11/06/2024
+# 	Address: 0xF0000
+# 	Runtime Size: 64 kB
+# 	ROM Size: 0 MB
+# 	Characteristics: ...
+```
+
+system 정보 확인
+```bash
+sudo dmidecode -t system
+# 시스템 장비 단위의 관리 정보
+# 하드웨어 제조사, 모델명, 시리얼, UUID 등 시스템 정보를 확인할 때 사용
+# e.g.
+# # dmidecode 3.5
+# Getting SMBIOS data from sysfs.
+# SMBIOS 3.6.0 present.
+# # SMBIOS implementations newer than version 3.5.0 are not
+# # fully supported by this version of dmidecode.
+
+# Handle 0x0001, DMI type 1, 27 bytes
+# System Information
+# 	Manufacturer: GMKtec
+# 	Product Name: NucBoxG3 Plus
+# 	Version: Default string
+# 	Serial Number: Default string
+# 	UUID: REDACTED
+# 	Wake-up Type: Power Switch
+# 	SKU Number: G3 Plus-001
+# 	Family: G3 Plus ...
+```
+
+processor 정보 확인
+```bash
+sudo dmidecode -t processor
+# CPU 소켓 단위 정보
+# 벤더, 모델, 속도, 코어, 스레드 수 등을 확인할 때 사용
+# e.g.
+# # dmidecode 3.5
+# Getting SMBIOS data from sysfs.
+# SMBIOS 3.6.0 present.
+# # SMBIOS implementations newer than version 3.5.0 are not
+# # fully supported by this version of dmidecode.
+
+# Handle 0x0036, DMI type 4, 48 bytes
+# Processor Information
+# 	Socket Designation: U3E1
+# 	Type: Central Processor
+# 	Family: Other
+# 	Manufacturer: Intel(R) Corporation
+# 	ID: REDACTED
+# 	Version: Intel(R) N150
+# 	Voltage: 1.0 V
+# 	External Clock: 100 MHz
+# 	Max Speed: 3600 MHz
+# 	Current Speed: 2871 MHz
+# 	Status: Populated, Enabled
+# 	Upgrade: Other ...
+```
+
+커널 관점에서 CPU 정보 확인
+```bash
+lscpu
+# CPU 정보는 lscpu로도 확인할 수 있음
+# 커널 관점에서 CPU 아키텍처/코어/스레드/플래그를 확인
+# dmidecode(펌웨어 관점)과 비교하여 OS가 실제 활용 가능한 기능을 교차 검증할 수 있음
+# e.g.
+# Architecture:             x86_64
+#   CPU op-mode(s):         32-bit, 64-bit
+#   Address sizes:          39 bits physical, 48 bits virtual
+#   Byte Order:             Little Endian
+# CPU(s):                   4
+#   On-line CPU(s) list:    0-3
+# Vendor ID:                GenuineIntel
+#   Model name:             Intel(R) N150
+#     CPU family:           6
+#     Model:                190
+#     Thread(s) per core:   1
+#     Core(s) per socket:   4
+#     Socket(s):            1
+#     Stepping:             0
+#     CPU(s) scaling MHz:   22%
+#     CPU max MHz:          3600.0000
+#     CPU min MHz:          700.0000
+#     BogoMIPS:             1612.80
+#     Flags:                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr ...
+```
