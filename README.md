@@ -8,11 +8,12 @@
 
 ## 학습 목차
 - **01. 시스템 구성 정보 확인**  
-  - 1.1 커널 정보 확인
-  - 1.2 CPU 정보 확인
-  - 1.3 메모리 정보 확인
-  - 1.4 디스크 정보 확인
-  - 1.5 네트워크 정보 확인
+  - [README](01-system-configuration-check/README.md)
+  - [1.1 커널 정보 확인](01-system-configuration-check/kernel-check.sh)
+  - [1.2 CPU 정보 확인](01-system-configuration-check/cpu-check.sh)
+  - [1.3 메모리 정보 확인](01-system-configuration-check/memory-check.sh)
+  - [1.4 디스크 정보 확인](01-system-configuration-check/disk-check.sh)
+  - [1.5 네트워크 정보 확인](01-system-configuration-check/network-check.sh)
 
 ## 📁 디렉토리 구조
 ```bash
