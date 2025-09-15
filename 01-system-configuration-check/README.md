@@ -281,3 +281,137 @@ smartctl -a /dev/nvme0n1p2
 # Namespace 1 Size/Capacity:          512,110,190,592 [512 GB] 
 # ...
 ```
+
+## 1.5 네트워크 정보 확인
+- 실행 스크립트: `network-check.sh`
+- 출력 로그: `network-check.log`
+
+### 핵심 명령
+
+네트워크 카드 정보 확인
+```bash
+lspci | grep -i ether
+# 설치된 네트워크 카드 정보 확인
+# 출력 예시:
+# 03:00.0 Ethernet controller: Intel Corporation Ethernet Controller I226-V (rev 04)
+```
+
+네트워크 연결 상태 확인
+```bash
+ethtool <인터페이스 이름>
+#
+# 출력 예시
+# Settings for enp3s0:
+# 	Supported ports: [ TP ]
+# 	Supported link modes:   10baseT/Half 10baseT/Full
+# 	                        100baseT/Half 100baseT/Full
+# 	                        1000baseT/Full
+# 	                        2500baseT/Full
+# 	Supported pause frame use: Symmetric
+# 	Supports auto-negotiation: Yes
+# 	Supported FEC modes: Not reported
+# 	Advertised link modes:  10baseT/Half 10baseT/Full
+# 	                        100baseT/Half 100baseT/Full
+# 	                        1000baseT/Full
+# 	                        2500baseT/Full
+# 	Advertised pause frame use: Symmetric
+# 	Advertised auto-negotiation: Yes
+# 	Advertised FEC modes: Not reported
+# 	Speed: 1000Mb/s
+# 	Duplex: Full
+# 	Auto-negotiation: on
+# 	Port: Twisted Pair
+# 	PHYAD: 0
+# 	Transceiver: internal
+# 	MDI-X: off (auto)
+# netlink error: Operation not permitted
+#         Current message level: 0x00000007 (7)
+#                                drv probe link
+# 	Link detected: yes
+```
+
+네트워크 카드 Ring Buffer 크기 확인
+```bash
+ethtool -g <인터페이스 이름>
+# Ring Buffer는 네트워크 카드의 버퍼 공간을 의미
+# 케이블을 통해서 들어온 패킷 정보는 먼저 Ring Buffer에 복사 후 커널에 패킷 도착을 알리고 패킷의 정보를 다시 커널로 복사
+# 그래서 Ring Buffer 크기가 작으면 네트워크 성능 저하를 일으킬 수 있음
+# 출력 예시:
+# Ring parameters for enp3s0:
+# Pre-set maximums:
+# RX:			4096
+# RX Mini:		n/a
+# RX Jumbo:		n/a
+# TX:			4096
+# TX push buff len:	n/a
+# Current hardware settings:
+# RX:			256
+# RX Mini:		n/a
+# RX Jumbo:		n/a
+# TX:			256
+# RX Buf Len:		n/a
+# CQE Size:		n/a
+# TX Push:		off
+# RX Push:		off
+# TX push buff len:	n/a
+# TCP data split:		n/a
+```
+
+네트워크 카드 성능 최적화 옵션 확인
+```bash
+ethtool -k <인터페이스 이름>
+# 네트워크 카드의 다양한 성능 최적화 옵션 확인
+# 출력 예시:
+# Features for enp3s0:
+# rx-checksumming: on
+# tx-checksumming: on
+# 	tx-checksum-ipv4: off [fixed]
+# 	tx-checksum-ip-generic: on
+# 	tx-checksum-ipv6: off [fixed]
+# 	tx-checksum-fcoe-crc: off [fixed]
+# 	tx-checksum-sctp: on
+# scatter-gather: on
+# 	tx-scatter-gather: on
+# 	tx-scatter-gather-fraglist: off [fixed]
+# tcp-segmentation-offload: on
+# 	tx-tcp-segmentation: on
+# 	tx-tcp-ecn-segmentation: on
+# 	tx-tcp-mangleid-segmentation: off
+# 	tx-tcp6-segmentation: on
+# generic-segmentation-offload: on
+# generic-receive-offload: on
+# large-receive-offload: off [fixed]
+# rx-vlan-offload: off
+# ...
+```
+
+네트워크 카드 성능 최적화 옵션 설정
+```bash
+ethtool -K <인터페이스 이름> <옵션> on|off 
+# 네트워크 인터페이스의 특정 오프로드 설정을 켜거나 끄는 데 사용
+# K는 'set' 또는 'configure'의 약자
+# 출력 예시:
+# sudo ethtool -K enp3s0 tx-checksumming off
+# Actual changes:
+# tx-checksum-ip-generic: off
+# tx-tcp-segmentation: off [not requested]
+# tx-tcp-ecn-segmentation: off [not requested]
+# tx-tcp6-segmentation: off [not requested]
+# tx-checksum-sctp: off
+```
+
+```bash
+ethtool -i <인터페이스 이름>
+# 네트워크 카드 커널 모듈 정보 표시
+# 출력 예시:
+# driver: igc
+# version: 6.8.0-60-generic
+# firmware-version: 2022:889d
+# expansion-rom-version: 
+# bus-info: 0000:03:00.0
+# supports-statistics: yes
+# supports-test: yes
+# supports-eeprom-access: yes
+# supports-register-dump: yes
+# supports-priv-flags: yes
+```
