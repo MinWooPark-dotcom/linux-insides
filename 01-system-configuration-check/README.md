@@ -400,6 +400,7 @@ ethtool -K <인터페이스 이름> <옵션> on|off
 # tx-checksum-sctp: off
 ```
 
+네트워크 카드 커널 모듈 정보 표시 확인
 ```bash
 ethtool -i <인터페이스 이름>
 # 네트워크 카드 커널 모듈 정보 표시
