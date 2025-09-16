@@ -14,6 +14,13 @@
   - [1.3 메모리 정보 확인](01-system-configuration-check/memory-check.sh)
   - [1.4 디스크 정보 확인](01-system-configuration-check/disk-check.sh)
   - [1.5 네트워크 정보 확인](01-system-configuration-check/network-check.sh)
+- **02. top 명령어를 사용한 프로세스 확인**  
+  - [README](02-process-with-top/README.md)
+  - [2.1 시스템 상태 확인](02-process-with-top/system-status.sh)
+  - [2.2 VIRT, RES, SHR](02-process-with-top/virt-res-shr.sh)
+  - [2.3 VIRT, RES, Memory Commit](02-process-with-top/virt-res-memory-commit.sh)
+  - [2.4 프로세스 상태 확인](02-process-with-top/process-status.sh)
+  - [2.5 프로세스 우선순위](02-process-with-top/process-priority.sh)
 
 ## 📁 디렉토리 구조
 ```bash
@@ -25,5 +32,12 @@ linux-insides/
 │   ├── memory-check.sh
 │   ├── network-check.sh
 │   └── README.md                    # 01장 학습 문서
+├── 02-processes-with-top/   # 02장 top 명령어를 사용한 프로세스 확인
+│   ├── system-status.sh
+│   ├── virt-res-shr.sh
+│   ├── virt-res-memory-commit.sh
+│   ├── process-status.sh
+│   ├── process-priority.sh
+│   └── README.md                    # 02장 학습 문서
 └── README.md                        # 루트 문서
 ```
